@@ -13,6 +13,7 @@ import json
 import os
 import sqlite3
 import tempfile
+from contextlib import ExitStack
 from pathlib import Path
 from typing import Generator
 from unittest.mock import MagicMock, patch
