@@ -17,10 +17,13 @@ Asserts the full DB state after a successful run:
 """
 
 import json
+from contextlib import ExitStack
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
 import pytest
+
+from tests.conftest import _LLM_PATCH_TARGETS
 
 from tests.conftest import (
     STRUCTURE_RESPONSE,
@@ -90,15 +93,18 @@ def _run_pipeline(tmp_db_path, monkeypatch):
         "storage": {"db_path": str(tmp_db_path)},
     }
 
-    with patch("llm.client.complete", side_effect=_llm_router), \
-         patch("pipeline.distribution.email_composer._send_email"), \
-         patch("pipeline.ingestion.daily_logix_scraper.settings", settings_override), \
-         patch("pipeline.routing.opportunity_router.settings", settings_override), \
-         patch("pipeline.distribution.email_composer.settings", settings_override), \
-         patch("config.settings", settings_override):
+    llm_mock = MagicMock(side_effect=_llm_router)
+
+    with ExitStack() as stack:
+        for target in _LLM_PATCH_TARGETS:
+            stack.enter_context(patch(target, llm_mock))
+        stack.enter_context(patch("pipeline.distribution.email_composer._send_email"))
+        stack.enter_context(patch("pipeline.ingestion.daily_logix_scraper.settings", settings_override))
+        stack.enter_context(patch("pipeline.routing.opportunity_router.settings", settings_override))
+        stack.enter_context(patch("pipeline.distribution.email_composer.settings", settings_override))
+        stack.enter_context(patch("config.settings", settings_override))
 
         from main import cmd_run
-        # cmd_run uses a fresh run_id each time — capture it via DB
         cmd_run(dry_run=False)
 
     import sqlite3
@@ -263,12 +269,17 @@ class TestPipelineE2ENoOpportunities:
             "pipeline": {"min_opportunity_score": 0.5, "max_opportunities_in_digest": 5},
         }
 
-        with patch("llm.client.complete", side_effect=_zero_router), \
-             patch("pipeline.distribution.email_composer._send_email") as mock_smtp, \
-             patch("pipeline.ingestion.daily_logix_scraper.settings", settings_override), \
-             patch("pipeline.routing.opportunity_router.settings", settings_override), \
-             patch("pipeline.distribution.email_composer.settings", settings_override), \
-             patch("config.settings", settings_override):
+        zero_mock = MagicMock(side_effect=_zero_router)
+        mock_smtp = MagicMock()
+
+        with ExitStack() as stack:
+            for target in _LLM_PATCH_TARGETS:
+                stack.enter_context(patch(target, zero_mock))
+            stack.enter_context(patch("pipeline.distribution.email_composer._send_email", mock_smtp))
+            stack.enter_context(patch("pipeline.ingestion.daily_logix_scraper.settings", settings_override))
+            stack.enter_context(patch("pipeline.routing.opportunity_router.settings", settings_override))
+            stack.enter_context(patch("pipeline.distribution.email_composer.settings", settings_override))
+            stack.enter_context(patch("config.settings", settings_override))
 
             from main import cmd_run
             cmd_run(dry_run=False)
@@ -294,12 +305,17 @@ class TestPipelineE2EDryRun:
             "storage": {"db_path": str(tmp_db_path)},
         }
 
-        with patch("llm.client.complete", side_effect=_llm_router), \
-             patch("pipeline.distribution.email_composer._send_email") as mock_smtp, \
-             patch("pipeline.ingestion.daily_logix_scraper.settings", settings_override), \
-             patch("pipeline.routing.opportunity_router.settings", settings_override), \
-             patch("pipeline.distribution.email_composer.settings", settings_override), \
-             patch("config.settings", settings_override):
+        llm_mock = MagicMock(side_effect=_llm_router)
+        mock_smtp = MagicMock()
+
+        with ExitStack() as stack:
+            for target in _LLM_PATCH_TARGETS:
+                stack.enter_context(patch(target, llm_mock))
+            stack.enter_context(patch("pipeline.distribution.email_composer._send_email", mock_smtp))
+            stack.enter_context(patch("pipeline.ingestion.daily_logix_scraper.settings", settings_override))
+            stack.enter_context(patch("pipeline.routing.opportunity_router.settings", settings_override))
+            stack.enter_context(patch("pipeline.distribution.email_composer.settings", settings_override))
+            stack.enter_context(patch("config.settings", settings_override))
 
             from main import cmd_run
             cmd_run(dry_run=True)
@@ -315,12 +331,16 @@ class TestPipelineE2EDryRun:
             "storage": {"db_path": str(tmp_db_path)},
         }
 
-        with patch("llm.client.complete", side_effect=_llm_router), \
-             patch("pipeline.distribution.email_composer._send_email"), \
-             patch("pipeline.ingestion.daily_logix_scraper.settings", settings_override), \
-             patch("pipeline.routing.opportunity_router.settings", settings_override), \
-             patch("pipeline.distribution.email_composer.settings", settings_override), \
-             patch("config.settings", settings_override):
+        llm_mock = MagicMock(side_effect=_llm_router)
+
+        with ExitStack() as stack:
+            for target in _LLM_PATCH_TARGETS:
+                stack.enter_context(patch(target, llm_mock))
+            stack.enter_context(patch("pipeline.distribution.email_composer._send_email"))
+            stack.enter_context(patch("pipeline.ingestion.daily_logix_scraper.settings", settings_override))
+            stack.enter_context(patch("pipeline.routing.opportunity_router.settings", settings_override))
+            stack.enter_context(patch("pipeline.distribution.email_composer.settings", settings_override))
+            stack.enter_context(patch("config.settings", settings_override))
 
             from main import cmd_run
             cmd_run(dry_run=True)
