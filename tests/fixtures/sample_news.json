@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Petrobras Awards Drillship Contract for Pre-Salt Santos Basin Campaign",
+    "body": "Petrobras has awarded a three-year contract to Transocean for the drillship Deepwater Titan to conduct a multi-well campaign in the Santos Basin pre-salt polygon. The campaign is expected to commence in Q3 2025, targeting development wells at the Buzios and Itapu fields at water depths exceeding 2,000 meters. The drillship is DP3-classified and will operate in a two-vessel SIMOPS configuration with a construction support vessel. The campaign involves drilling 12 production wells and 4 injectors over the contract period.",
+    "source_url": "https://fixture.example.com/petrobras-drillship-contract",
+    "published_at": "2025-04-15"
+  },
+  {
+    "title": "Shell Announces Exploration Well Offshore Nigeria — Block OML 130",
+    "body": "Shell Nigeria E&P has received regulatory approval from NUPRC to drill a wildcat exploration well on Block OML 130 in the deep offshore Niger Delta. The well will be drilled using a semi-submersible rig in approximately 1,300 meters of water. A jack-up will not be suitable due to water depth. Conductor design studies are currently underway ahead of the anticipated spud in late 2025. The block features soft seabed conditions typical of West Africa deepwater.",
+    "source_url": "https://fixture.example.com/shell-nigeria-exploration",
+    "published_at": "2025-04-14"
+  },
+  {
+    "title": "Equinor Plans North Sea Workover Campaign on Oseberg Platform Wells",
+    "body": "Equinor has announced a major workover campaign on the Oseberg A platform in the Norwegian North Sea, targeting 8 wells requiring coiled tubing intervention and ESP replacement. The campaign will utilize a dedicated intervention vessel and is planned for Q4 2025 through Q2 2026. The platform is fixed and located in approximately 100 meters of water. Several wells have been offline since 2023 due to production issues. A jack-up rig will support the intervention activities.",
+    "source_url": "https://fixture.example.com/equinor-oseberg-workover",
+    "published_at": "2025-04-14"
+  },
+  {
+    "title": "TotalEnergies Receives Block Award in Suriname Offshore — Plans First Well",
+    "body": "TotalEnergies has been awarded Block 60 offshore Suriname in the latest licensing round. The block covers an area of 4,700 km² in water depths of 500–2,500 meters. The company plans to conduct a 3D seismic acquisition campaign in 2025 followed by drilling of the first exploration well using a drillship in 2026. Environmental and metocean studies are currently being initiated to support operability assessment for DP drilling operations.",
+    "source_url": "https://fixture.example.com/totalenergies-suriname-block",
+    "published_at": "2025-04-13"
+  },
+  {
+    "title": "Chevron Tengiz FPSO — Riser Integrity Inspection Reveals Fatigue Concerns",
+    "body": "Chevron's Tengiz field FPSO in Kazakhstan has completed a subsea riser integrity inspection revealing accelerated fatigue damage on two steel catenary risers (SCRs) due to unexpectedly high current velocities during winter 2024. Chevron engineering is currently reviewing options including riser replacement, VIV suppression strake installation, and revised operational limits. The inspection was conducted by a specialist subsea ROV contractor. No production curtailment has been announced yet.",
+    "source_url": "https://fixture.example.com/chevron-tengiz-riser",
+    "published_at": "2025-04-13"
+  }
+]

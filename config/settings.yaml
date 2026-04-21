@@ -1,0 +1,37 @@
+app:
+  name: RigLogix Router
+  version: "0.1.0"
+  log_level: INFO
+
+llm:
+  model: claude-sonnet-4-6
+  max_tokens: 4096
+  temperature: 0.2
+  # Prompts that qualify for cache (static context injected as system)
+  cache_system_prompt: true
+
+ingestion:
+  source: daily_logix
+  max_news_per_run: 15
+  # Set to true to use local fixture files instead of live scraping
+  use_fixtures: false
+  fixtures_path: tests/fixtures/
+
+storage:
+  db_path: data/riglogix.db
+
+pipeline:
+  # Minimum composite score to include in digest (0.0 – 1.0)
+  min_opportunity_score: 0.4
+  max_opportunities_in_digest: 5
+
+email:
+  subject_template: "RigLogix Router — {date} | {count} oportunidade(s) identificada(s)"
+  send_time: "07:00"   # local time, used by scheduler
+
+scheduler:
+  enabled: true
+  cron:
+    hour: 7
+    minute: 0
+    timezone: America/Sao_Paulo
