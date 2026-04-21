@@ -13,6 +13,7 @@ import json
 import os
 import sqlite3
 import tempfile
+from contextlib import ExitStack
 from pathlib import Path
 from typing import Generator
 from unittest.mock import MagicMock, patch
@@ -172,17 +173,37 @@ def make_llm_response(payload) -> MagicMock:
     return m
 
 
+_LLM_PATCH_TARGETS = [
+    # Patch at each usage site (from llm.client import complete captures a local ref)
+    "pipeline.structuring.news_parser.complete",
+    "pipeline.enrichment.enricher.complete",
+    "pipeline.classification.product_classifier.complete",
+    "pipeline.timing.timing_evaluator.complete",
+    "pipeline.distribution.email_composer.complete",
+    # Also patch the definition site for any direct llm.client.complete() calls
+    "llm.client.complete",
+]
+
+
 @pytest.fixture()
 def mock_llm():
     """
-    Patch llm.client.complete with a configurable mock.
+    Patch llm.client.complete at every usage site with a single shared MagicMock.
+
+    All pipeline modules do `from llm.client import complete`, binding a local
+    reference that is unreachable by patching just `llm.client.complete`.
+    We patch every module's own reference so a single `mock_llm.return_value = X`
+    controls all calls.
 
     Usage in tests:
         mock_llm.return_value = {...}   # set per-test response
         mock_llm.side_effect = [r1, r2] # sequence of responses
     """
-    with patch("llm.client.complete") as m:
-        yield m
+    mock = MagicMock()
+    with ExitStack() as stack:
+        for target in _LLM_PATCH_TARGETS:
+            stack.enter_context(patch(target, mock))
+        yield mock
 
 
 # ── LLM canned responses (realistic shapes per prompt) ──────────────────────
